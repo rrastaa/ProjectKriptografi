@@ -32,6 +32,16 @@ class AuthController extends Controller
             ? $hasher->check($data['password'], $user->password)
             : $hasher->check($data['password'], $hasher->make('dummy-password')) && false; // waktu proses disamakan
 
+        // Verify USB security key if configured
+        $usbPath = env('USB_KEY_PATH');
+        $usbHash = env('USB_KEY_HASH');
+        if ($usbPath && $usbHash) {
+            if (!file_exists($usbPath) || !hash_equals($usbHash, hash('sha256', file_get_contents($usbPath)))) {
+                $this->audit->record($user, 'auth.usb_key_missing', 'user', $user ? $user->id : null);
+                return response()->json(['message' => 'USB security key not detected or invalid.'], 403);
+            }
+        }
+
         if (!$valid || !$user->is_active) {
             $this->audit->record($user, 'auth.login_failed', 'user', $user?->id, null, ['email_sha256' => hash('sha256', Str::lower($data['email']))]);
             return response()->json(['message' => 'Email atau password salah.'], 422);

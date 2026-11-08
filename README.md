@@ -114,7 +114,7 @@ Ubuntu/Debian (contoh): `sudo apt install php php-cli php-pgsql php-mbstring php
 ### Langkah 1 — Siapkan database
 
 ```bash
-sudo -u postgres psql -c "CREATE USER caselock WITH PASSWORD 'ganti-password-ini';"
+sudo -u postgres psql -c "CREATE USER caselock WITH PASSWORD 'caselock';"
 sudo -u postgres psql -c "CREATE DATABASE caselock OWNER caselock;"
 ```
 
@@ -124,7 +124,7 @@ sudo -u postgres psql -c "CREATE DATABASE caselock OWNER caselock;"
 
 ```bash
 cd caselock
-DB_PASSWORD='ganti-password-ini' ./scripts/setup-backend.sh
+DB_PASSWORD='caselock' ./scripts/setup-backend.sh
 ```
 
 Skrip ini: membuat proyek Laravel di `backend/`, menyalin isi `server/`, mengisi `.env` (Argon2id, PostgreSQL, WebAuthn), membuat `APP_KEY` dan **master key CASELOCK**, lalu menjalankan migrasi. Variabel opsional: `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`.
